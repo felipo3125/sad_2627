@@ -26,7 +26,7 @@ ping 192.168.56.101
 ping -c 3 192.168.56.101
 ```
 
-#B2 medición antes
+# B2 medición antes
 En torrent auditor:
 ```bash
 sudo nmap -sV 192.168.56.101 -oN antes.txt
@@ -63,8 +63,8 @@ resultado:
 
 
 
-#B3 contramedidas (en Torrent-Vulnerable,con sudo)
-#Contramedida 1 — Inventariar y apagar servicios innecesarios
+# B3 contramedidas (en Torrent-Vulnerable,con sudo)
+# Contramedida 1 — Inventariar y apagar servicios innecesarios
 
 para listar lo que se esta escuchando aplicaremos el siguietne comando
 
@@ -141,7 +141,7 @@ sudo update-rc.d -f samba remove
 
 lo mismo para el resto a excepcion del que pone el tabla que es comentar en ciertos archivos para que no vuelvan a iniciarse
 
-#5. Servicios "a demanda" (inetd) — telnet, rsh, rlogin, exec, tftp, ingreslock (backdoor):
+# 5. Servicios "a demanda" (inetd) — telnet, rsh, rlogin, exec, tftp, ingreslock (backdoor):
 
 ```bash
 sudo nano /etc/inetd.conf
@@ -163,7 +163,7 @@ estos serian algunos ejemplos, lo mismo aplicaria para los demas
 para verificar que solo quedan los que queremos simplmente usar el mismo comando de antes para ver cuales estaban activos con netstat y grep
 
 
-#Contramedida 2 — Bloquear el ping (obligatoria)
+# Contramedida 2 — Bloquear el ping (obligatoria)
 
 ```bash
 sudo iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
@@ -171,7 +171,7 @@ sudo iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
 
 y luego desde otra maquina hacemos ping para verificar de que ya quedo deshabilitado
 
-#B4 medicion despues
+# B4 medicion despues
 
 ```bash
 sudo nmap -sV 192.168.56.101 -oN despues.txt
@@ -185,4 +185,33 @@ diff antes.txt despues.txt
 | Respuesta al ping            | Sí                                                                 | `iptables -A INPUT -p icmp --icmp-type echo-request -j DROP`                          | No (timeout, 100% packet loss)            |
 
 
-##Reflexion
+## Reflexion
+
+1. ¿Qué contramedida ha reducido más lo que ve el atacante? ¿Por qué?
+R/ el parar los servicios porque cierra puertas literalmente, se puede colar por menos lugares y puede estar seguro 
+  
+2. Si solo ocultáis un banner pero el servicio sigue activo, ¿la vulnerabilidad sigue ahí? Razonad la respuesta.
+   R/ si, la vulnerabilidad sigue ahi puesto que solo eliminamos la parte visual y no realmente lo que se esta ejecutando por detras que seria el servicio, aun teniendo esa puerta abierta para un posible ataque
+   
+3. Torrent-Vulnerable usa un sistema operativo sin soporte desde hace años. ¿Puede una contramedida de estas sustituir a actualizarlo? ¿Qué haríais en una empresa real?
+   R/ No puede sustituirlo. Las contramedidas aplicadas (apagar servicios, iptables, ocultar banners) son mitigaciones temporales, no soluciones:
+   El SO sin soporte no recibe parches de seguridad: cualquier vulnerabilidad nueva del kernel o de librerías base queda sin corregir.
+
+Apagar servicios reduce superficie, pero el sistema sigue siendo vulnerable en lo que queda expuesto (SSH, Apache) y en el propio kernel.
+
+4. De todas las contramedidas de las partes A y B, ¿cuáles evitan que el atacante encuentre información y cuáles solo ayudan a detectar que lo están intentando? (Aún no las hemos aplicado todas, pero pensad en cuáles serían de cada tipo.)
+R/ Evitan que el atacante encuentre información (dificultan el reconocimiento/enumeración):
+
+Apagar servicios innecesarios → elimina puertos y servicios visibles.
+
+Bloquear el ping (ICMP echo-request) → evita descubrimiento por ping sweep.
+
+Ocultar banners → dificulta la identificación de versiones.
+
+Solo ayudan a detectar que lo están intentando (monitorización/detección):
+
+Registrar escaneos con iptables -j LOG → genera logs de posibles escaneos.
+
+dmesg | grep POSIBLE-ESCANEO → revisión de intentos.
+
+Logs de Apache/SSH → registran intentos de conexión.

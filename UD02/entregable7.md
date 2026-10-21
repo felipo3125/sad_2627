@@ -239,6 +239,6 @@ La diferencia principal es que las medidas preventivas intentan reducir la proba
 
 La práctica ha permitido comprobar cómo se pueden detectar amenazas mediante un antivirus, analizar indicios de rootkits y observar el comportamiento de un script sospechoso en un entorno controlado.
 
-EICAR permitió comprobar la detección de una amenaza de prueba sin utilizar malware real. ClamAV identificó el archivo y permitió aislarlo mediante cuarentena. Por otro lado, el análisis estático y dinámico de `sospechoso.sh` permitió identificar la creación de archivos, la apertura de un puerto y un mecanismo de persistencia mediante `crontab`.
+EICAR permite comprobar la detección de una amenaza de prueba sin utilizar malware real. ClamAV identificó el archivo y permitió aislarlo mediante cuarentena. Por otro lado, el análisis estático y dinámico de `sospechoso.sh` permitió identificar la creación de archivos, la apertura de un puerto y un mecanismo de persistencia mediante `crontab`.
 
 Finalmente, la práctica demuestra la importancia de combinar herramientas de detección, aislamiento, monitorización y copias de seguridad para reducir los riesgos y facilitar la recuperación ante un incidente.

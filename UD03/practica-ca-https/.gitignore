@@ -1,0 +1,22 @@
+# Claves privadas y material sensible
+*.key
+*.csr
+srv.crt
+ca.crt
+*.p12
+*.pfx
+
+# Backups de la CA
+ca-torrent-backup.tar.gz
+*.tar.gz
+*.tar
+
+# acme.sh
+.acme.sh/
+account.conf
+
+# Sistema y temporales
+.DS_Store
+Thumbs.db
+*.swp
+*~
